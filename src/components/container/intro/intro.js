@@ -14,7 +14,7 @@ class Intro extends BaseComponent {
     render() {
         return (
         	<div className="intro">
-        	    Hello, this is dissertation helper
+        	    Hello, this is dissertation helper!
             </div>
         );
     }

@@ -16,7 +16,16 @@ class Main extends BaseComponent {
         return (
             <div className="main container">
                 <div className="row">
-                    <div className="col-md-2">Menu</div>
+                    <div className="col-md-2">
+                        <ul>
+                            <li>
+                                <a href="#/name-sorter">Name Sorter</a>
+                            </li>
+                            <li>
+                                <a href="#/">Home</a>
+                            </li>
+                        </ul>
+                    </div>
                     <div className="col-md-10">
                         <RouteHandler />
                     </div>
