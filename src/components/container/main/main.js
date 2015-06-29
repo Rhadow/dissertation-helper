@@ -16,7 +16,7 @@ class Main extends BaseComponent {
         return (
             <div className="main container">
                 <div className="row">
-                    <div className="col-md-2">
+                    <div className="col-md-12">
                         <ul>
                             <li>
                                 <a href="#/name-sorter">Name Sorter</a>
@@ -26,7 +26,9 @@ class Main extends BaseComponent {
                             </li>
                         </ul>
                     </div>
-                    <div className="col-md-10">
+                </div>
+                <div className="row">
+                    <div className="col-md-12">
                         <RouteHandler />
                     </div>
                 </div>

@@ -24,6 +24,7 @@ class AuthorNameSorterStore extends EventEmitter{
         let charStrokeMap = data.charStrokeMap,
             result = data.originalList.slice(0),
             sameStrokeMap = [];
+
         result.sort((name, nextName) => {
             let seperatorRegex = /[ ,.、。，\n]/gi,
                 authorName = name.slice(0, name.search(seperatorRegex)),
@@ -54,10 +55,9 @@ class AuthorNameSorterStore extends EventEmitter{
                 }
                 return charStrokeMap[authorName[i]] - charStrokeMap[nextAuthorName[i]];
             }
-
-
         });
-        console.log(result);
+
+        this._listSortedByAuthorName = result.join('\n');
     }
 
     getSortedList() {

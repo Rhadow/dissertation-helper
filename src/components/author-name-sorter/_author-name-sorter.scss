@@ -1,2 +1,11 @@
 .author-name-sorter {
+	.arthor-name-input-text-area {
+		height: 250px;
+		resize: none;
+	}
+	.output-text-area {
+		@extend .arthor-name-input-text-area;
+		border: none;
+		cursor: inherit;
+	}
 }

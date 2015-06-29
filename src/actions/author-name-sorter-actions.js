@@ -4,42 +4,30 @@ import Api from '../service/api.js';
 
 let AuthorNameSorterActions = {
 	sortListByAuthorStroke(list) {
+		let charStrokeMap = {},
+		    charactersNeedToBeLookUp = [],
+		    seperatorRegex = /[ ,.、。，\n]/gi,
+		    authorNames = list.map((item) => {
+			    return item.slice(0, item.search(seperatorRegex));
+		    }),
+		    characterPromises;
 
-		let charStrokeMap = {};
-
-		let seperatorRegex = /[ ,.、。，\n]/gi;
-
-		let authorNames = list.map((item) => {
-			return item.slice(0, item.search(seperatorRegex));
-		});
-
-		let namePromises = authorNames.map((name) => {
-			return name.split('').map((char) => {
-				return Api.getCharacterInformation(char);
+		authorNames.forEach((name) => {
+			name.split('').forEach((char) => {
+				if(char !== '' && charactersNeedToBeLookUp.indexOf(char) === -1) {
+					charactersNeedToBeLookUp.push(char);
+				}
 			});
 		});
-
-		let characterPromises = namePromises.map((name) => {
-			let deferred = $.Deferred();
-			$.when.apply($, name).then((...responses) => {
-				let result = responses.map((res) => {
-					return {
-						char: res[0].title,
-						stroke: res[0].stroke_count
-					};
-				});
-				deferred.resolve(result);
-			}, () => {
-				deferred.reject('fetch character information failed');
-			});
-			return deferred.promise();
+		console.log(authorNames);
+		characterPromises = charactersNeedToBeLookUp.map((char) => {
+			return Api.getCharacterInformation(char);
 		});
-
 		$.when.apply($, characterPromises).then((...responses) => {
-			responses.forEach((name) => {
-				name.forEach((char) => {
-					charStrokeMap[char.char] = char.stroke;
-				});
+			responses.forEach((res) => {
+				let title = res[0].title,
+				    strokes = res[0].stroke_count;
+				charStrokeMap[title] = strokes;
 			});
 			AppDispatcher.handleViewAction({
 	            actionType: FluxConstants.SORT_AUTHOR_BY_NAME,
