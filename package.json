@@ -34,6 +34,7 @@
     "http-proxy": "^1.11.1",
     "node-libs-browser": "^0.5.2",
     "opn": "^1.0.2",
+    "react-router": "^0.13.3",
     "rimraf": "^2.3.4",
     "sass-loader": "^1.0.2",
     "style-loader": "^0.12.3",
