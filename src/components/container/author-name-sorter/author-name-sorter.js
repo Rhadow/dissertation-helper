@@ -3,7 +3,6 @@ import './_author-name-sorter';
 
 // React
 import React from 'react';
-import ZeroClipboard from 'zeroclipboard';
 
 // Components
 import BaseComponent from '../../base-component';
@@ -31,7 +30,9 @@ class AuthorNameSorterContainer extends BaseComponent {
 丁凡 譯(2011)。《以畫為鏡-存在藝術治療》。台北:張老師。ISBN:9789576937743 。 Moon B. L. (2009). Existential Art Therapy:The Canvas Mirror., Springfield Charles C Thomas.
 吳明富、黃傳永 (2013)。《藝樹園丁:失落與悲傷藝術治療》。台北市:張老師。 ISBN:9789576938276`,
             inputHintText: '輸入',
-            outputHintText: '輸出'
+            outputHintText: '輸出',
+            copyToClipboardText: '複製到剪貼簿',
+            copyCompleteText: '已複製!'
 		};
 		this._bind(
 			'_onAuthorNameSorterStoreChange',
@@ -40,18 +41,6 @@ class AuthorNameSorterContainer extends BaseComponent {
 	}
 	componentDidMount() {
 		AuthorNameSorterStore.addChangeListener(this._onAuthorNameSorterStoreChange);
-        ZeroClipboard.config({
-            swfPath: '../../components/author-name-sorter/ZeroClipboard.swf'
-        });
-        let clipboardClient = new ZeroClipboard(document.getElementById('copyToClipboardBtn'));
-        clipboardClient.on('ready', () => {
-            clipboardClient.on('copy', (event) => {
-                event.clipboardData.setData('text/plain', event.target.value);
-            });
-            clipboardClient.on('aftercopy', (event) => {
-                console.log(`Copied text to clipboard: ${event.data['text/plain']}`);
-            });
-        });
 	}
 	componentWillUnmount() {
         AuthorNameSorterStore.removeChangeListener(this._onAuthorNameSorterStoreChange);
@@ -75,7 +64,9 @@ class AuthorNameSorterContainer extends BaseComponent {
             noticeThree,
             exampleInput,
             inputHintText,
-            outputHintText
+            outputHintText,
+            copyToClipboardText,
+            copyCompleteText
     	} = this.state;
 
         return (
@@ -96,6 +87,8 @@ class AuthorNameSorterContainer extends BaseComponent {
                 <AuthorNameSorter
                     inputHintText={inputHintText}
                     outputHintText={outputHintText}
+                    copyToClipboardText={copyToClipboardText}
+                    copyCompleteText={copyCompleteText}
                     onSortHandler={AuthorNameSorterActions.sortListByAuthorStroke}
                     sortedResult={authorNameSorterResult}
                     onCopyToClipboardHandler={this._onCopyToClipboardHandler}/>
