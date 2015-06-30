@@ -7,19 +7,29 @@ let AuthorNameSorterActions = {
 		let charStrokeMap = {},
 		    charactersNeedToBeLookUp = [],
 		    seperatorRegex = /[ ,.、。，\n]/gi,
+		    englishRegex = /^[a-zA-Z]$/,
+		    chineseReferenceList = [],
+		    englishReferenceList = [],
 		    authorNames = list.map((item) => {
 			    return item.slice(0, item.search(seperatorRegex));
 		    }),
 		    characterPromises;
 
-		authorNames.forEach((name) => {
+		authorNames.forEach((name, index) => {
+			let isFirstCharacterEnglish = englishRegex.test(name[0]);
+			if(isFirstCharacterEnglish) {
+				englishReferenceList.push(list[index]);
+			}
+			else {
+				chineseReferenceList.push(list[index]);
+			}
 			name.split('').forEach((char) => {
-				if(char !== '' && charactersNeedToBeLookUp.indexOf(char) === -1) {
+				let isEnglishLetter = englishRegex.test(char);
+				if(!isEnglishLetter && charactersNeedToBeLookUp.indexOf(char) === -1) {
 					charactersNeedToBeLookUp.push(char);
 				}
 			});
 		});
-		console.log(authorNames);
 		characterPromises = charactersNeedToBeLookUp.map((char) => {
 			return Api.getCharacterInformation(char);
 		});
@@ -32,7 +42,8 @@ let AuthorNameSorterActions = {
 			AppDispatcher.handleViewAction({
 	            actionType: FluxConstants.SORT_AUTHOR_BY_NAME,
 	            data      : {
-	            	originalList: list,
+	            	englishList: englishReferenceList,
+	            	chineseList: chineseReferenceList,
 	            	charStrokeMap: charStrokeMap
 	            }
 	        });

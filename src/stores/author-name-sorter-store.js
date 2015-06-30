@@ -22,10 +22,11 @@ class AuthorNameSorterStore extends EventEmitter{
 
     sortAuthorByName(data) {
         let charStrokeMap = data.charStrokeMap,
-            result = data.originalList.slice(0),
+            chineseResult = data.chineseList.slice(0),
+            englishResult = data.englishList.slice(0),
             sameStrokeMap = [];
 
-        result.sort((name, nextName) => {
+        chineseResult.sort((name, nextName) => {
             let seperatorRegex = /[ ,.、。，\n]/gi,
                 authorName = name.slice(0, name.search(seperatorRegex)),
                 nextAuthorName = nextName.slice(0, nextName.search(seperatorRegex)),
@@ -56,8 +57,8 @@ class AuthorNameSorterStore extends EventEmitter{
                 return charStrokeMap[authorName[i]] - charStrokeMap[nextAuthorName[i]];
             }
         });
-
-        this._listSortedByAuthorName = result.join('\n');
+        englishResult.sort();
+        this._listSortedByAuthorName = chineseResult.concat(englishResult).join('\n');
     }
 
     getSortedList() {
