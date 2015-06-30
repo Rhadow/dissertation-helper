@@ -6,26 +6,33 @@ let AuthorNameSorterActions = {
 	sortListByAuthorStroke(list) {
 		let charStrokeMap = {},
 		    charactersNeedToBeLookUp = [],
-		    seperatorRegex = /[ ,.、。，\n]/gi,
+		    seperatorRegex = /[ ,.、。，\n]/,
 		    englishRegex = /^[a-zA-Z]$/,
+		    chineseRegex = /[\u4E00-\u9FFF\u3400-\u4DFF\uF900-\uFAFF]/,
+		    lineSeparatorRegex = /[^\u00a0\u1680\u180e\u2000-\u200a\u2028-\u2029\u202f\u205f\u3000\uFFF9-\uFFFF]/,
 		    chineseReferenceList = [],
 		    englishReferenceList = [],
 		    authorNames = list.map((item) => {
-			    return item.slice(0, item.search(seperatorRegex));
+			    return item.slice(0, item.search(seperatorRegex)).split('').filter((char) => {
+		    		return char.match(chineseRegex) || char.match(englishRegex);
+		    	}).join('');
 		    }),
 		    characterPromises;
 
 		authorNames.forEach((name, index) => {
-			let isFirstCharacterEnglish = englishRegex.test(name[0]);
+			let isFirstCharacterEnglish = name.length > 0 && name[0].match(englishRegex),
+			    isFirstCharacterChinese = name.length > 0 && name[0].match(chineseRegex),
+			    item = list[index].split('').filter((char) => char.match(lineSeparatorRegex)).join('');
+
 			if(isFirstCharacterEnglish) {
-				englishReferenceList.push(list[index]);
+				englishReferenceList.push(item);
 			}
-			else {
-				chineseReferenceList.push(list[index]);
+			if(isFirstCharacterChinese) {
+				chineseReferenceList.push(item);
 			}
 			name.split('').forEach((char) => {
-				let isEnglishLetter = englishRegex.test(char);
-				if(!isEnglishLetter && charactersNeedToBeLookUp.indexOf(char) === -1) {
+				let isChineseLetter = char.match(chineseRegex);
+				if(isChineseLetter && charactersNeedToBeLookUp.indexOf(char) === -1) {
 					charactersNeedToBeLookUp.push(char);
 				}
 			});

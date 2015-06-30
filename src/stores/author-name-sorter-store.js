@@ -22,14 +22,14 @@ class AuthorNameSorterStore extends EventEmitter{
 
     sortAuthorByName(data) {
         let charStrokeMap = data.charStrokeMap,
-            chineseResult = data.chineseList.slice(0),
-            englishResult = data.englishList.slice(0),
+            chineseResult = data.chineseList.slice(0).filter((item) => item !== ''),
+            englishResult = data.englishList.slice(0).filter((item) => item !== ''),
             sameStrokeMap = [];
 
-        chineseResult.sort((name, nextName) => {
+        chineseResult.sort((item, nextItem) => {
             let seperatorRegex = /[ ,.、。，\n]/gi,
-                authorName = name.slice(0, name.search(seperatorRegex)),
-                nextAuthorName = nextName.slice(0, nextName.search(seperatorRegex)),
+                authorName = item.slice(0, item.search(seperatorRegex)),
+                nextAuthorName = nextItem.slice(0, nextItem.search(seperatorRegex)),
                 compareLength = authorName.length >= nextAuthorName.length ? authorName.length : nextAuthorName.length;
 
             for(let i = 0; i < compareLength; i++) {
@@ -57,8 +57,10 @@ class AuthorNameSorterStore extends EventEmitter{
                 return charStrokeMap[authorName[i]] - charStrokeMap[nextAuthorName[i]];
             }
         });
-        englishResult.sort();
-        this._listSortedByAuthorName = chineseResult.concat(englishResult).join('\n');
+        englishResult.sort((item, nextItem) => {
+            return item.toLowerCase().localeCompare(nextItem.toLowerCase());
+        });
+        this._listSortedByAuthorName = chineseResult.concat(englishResult).join('\n\n');
     }
 
     getSortedList() {
