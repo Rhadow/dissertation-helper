@@ -3,6 +3,7 @@ import './_author-name-sorter';
 
 // React
 import React from 'react';
+import ZeroClipboard from 'zeroclipboard';
 
 // Components
 import BaseComponent from '../../base-component';
@@ -33,11 +34,24 @@ class AuthorNameSorterContainer extends BaseComponent {
             outputHintText: '輸出'
 		};
 		this._bind(
-			'_onAuthorNameSorterStoreChange'
+			'_onAuthorNameSorterStoreChange',
+            '_onCopyToClipboardHandler'
 		);
 	}
 	componentDidMount() {
 		AuthorNameSorterStore.addChangeListener(this._onAuthorNameSorterStoreChange);
+        ZeroClipboard.config({
+            swfPath: '../../components/author-name-sorter/ZeroClipboard.swf'
+        });
+        let clipboardClient = new ZeroClipboard(document.getElementById('copyToClipboardBtn'));
+        clipboardClient.on('ready', () => {
+            clipboardClient.on('copy', (event) => {
+                event.clipboardData.setData('text/plain', event.target.value);
+            });
+            clipboardClient.on('aftercopy', (event) => {
+                console.log(`Copied text to clipboard: ${event.data['text/plain']}`);
+            });
+        });
 	}
 	componentWillUnmount() {
         AuthorNameSorterStore.removeChangeListener(this._onAuthorNameSorterStoreChange);
@@ -46,6 +60,9 @@ class AuthorNameSorterContainer extends BaseComponent {
     	this.setState({
     		authorNameSorterResult: AuthorNameSorterStore.getSortedList()
     	});
+    }
+    _onCopyToClipboardHandler(e) {
+        e.preventDefault();
     }
     render() {
     	const {
@@ -80,7 +97,8 @@ class AuthorNameSorterContainer extends BaseComponent {
                     inputHintText={inputHintText}
                     outputHintText={outputHintText}
                     onSortHandler={AuthorNameSorterActions.sortListByAuthorStroke}
-                    sortedResult={authorNameSorterResult}/>
+                    sortedResult={authorNameSorterResult}
+                    onCopyToClipboardHandler={this._onCopyToClipboardHandler}/>
             </div>
         );
     }

@@ -11,13 +11,9 @@ class AuthorNameSorter extends BaseComponent {
 	constructor(props) {
 		super(props);
 		this._bind(
-			'_onSubmitHandler',
-			'_onClearHandler'
+			'_onClearHandler',
+			'_onSubmitHandler'
 		);
-	}
-	_onClearHandler(e) {
-		e.preventDefault();
-		React.findDOMNode(this.refs.authorInput).value = '';
 	}
 	_onSubmitHandler(e) {
 		e.preventDefault();
@@ -25,11 +21,16 @@ class AuthorNameSorter extends BaseComponent {
 		    listOfReference = inputContent.split('\n');
 		this.props.onSortHandler(listOfReference);
 	}
+	_onClearHandler(e) {
+		e.preventDefault();
+		React.findDOMNode(this.refs.authorInput).value = '';
+	}
 	render() {
 		const {
 			inputHintText,
 			outputHintText,
-			sortedResult
+			sortedResult,
+			onCopyToClipboardHandler
 		} = this.props;
 
 		return (
@@ -54,9 +55,19 @@ class AuthorNameSorter extends BaseComponent {
 						    ref="authorInput" />
 			        </div>
 			        <div className="col-md-6">
-			            <h4>{outputHintText}</h4>
+			            <h4>
+			                {outputHintText}
+			                <a
+					            className="btn btn-default btn-sm"
+					            id="copyToClipboardBtn"
+					            data-clipboard-target="authorOutput"
+					            onClick={onCopyToClipboardHandler}>
+						        <span className="glyphicon glyphicon-list-alt"></span>
+						    </a>
+			            </h4>
 				        <textarea
 				            className="form-control output-text-area"
+				            id="authorOutput"
 				            disabled
 				            value={sortedResult} />
 			        </div>
@@ -67,16 +78,18 @@ class AuthorNameSorter extends BaseComponent {
 }
 
 AuthorNameSorter.propTypes = {
-	inputHintText : React.PropTypes.string,
-	outputHintText: React.PropTypes.string,
-	sortedResult  : React.PropTypes.string,
-	onSortHandler : React.PropTypes.func
+	inputHintText           : React.PropTypes.string,
+	outputHintText          : React.PropTypes.string,
+	sortedResult            : React.PropTypes.string,
+	onSortHandler           : React.PropTypes.func,
+	onCopyToClipboardHandler: React.PropTypes.func
 };
 AuthorNameSorter.defaultProps = {
-	inputHintText : 'Input',
-	outputHintText: 'Output',
-	sortedResult  : '',
-	onSortHandler : () => {}
+	inputHintText           : 'Input',
+	outputHintText          : 'Output',
+	sortedResult            : '',
+	onSortHandler           : () => {},
+	onCopyToClipboardHandler: () => {}
 };
 
 export default AuthorNameSorter;
