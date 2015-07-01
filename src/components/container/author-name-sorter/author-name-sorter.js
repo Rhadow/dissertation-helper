@@ -14,6 +14,11 @@ import AuthorNameSorterActions from '../../../actions/author-name-sorter-actions
 // Stores
 import AuthorNameSorterStore from '../../../stores/author-name-sorter-store';
 
+let actionMap = {
+    sortListByAuthorStroke: AuthorNameSorterActions.sortListByAuthorStroke,
+    setLoadingStatusTo: AuthorNameSorterActions.setLoadingStatusTo
+};
+
 class AuthorNameSorterContainer extends BaseComponent {
 	constructor(props) {
 		super(props);
@@ -21,6 +26,7 @@ class AuthorNameSorterContainer extends BaseComponent {
             nameSorterTitle: '文獻排列小幫手',
             inputExampleTitle: '輸入範例：',
 			authorNameSorterResult: '',
+            loadingText: '處理中...',
             description: '本功能將依照作者姓名筆畫進行文獻排列，會自動將中英文作者分類，輸入需注意以下三點：',
             noticeOne: '每篇文獻必須以作者名開始，作者名結束後以空白與剩餘內容斷開',
             noticeTwo: '多作者可以頓號分隔，會以排在第一的作者名做為排列標準',
@@ -39,11 +45,13 @@ Ferrell, B. R., Grant, M., Funk, B., Otis-Green, S., & Garcia, N. (1998). Qualit
             inputHintText: '輸入',
             outputHintText: '輸出',
             copyToClipboardText: '複製到剪貼簿',
-            copyCompleteText: '已複製!'
+            copyCompleteText: '已複製!',
+            showLoading: AuthorNameSorterStore.getLoadingStatus()
 		};
 		this._bind(
-			'_onAuthorNameSorterStoreChange',
-            '_onCopyToClipboardHandler'
+            '_onSortHandler',
+            '_onCopyToClipboardHandler',
+            '_onAuthorNameSorterStoreChange'
 		);
 	}
 	componentDidMount() {
@@ -52,13 +60,18 @@ Ferrell, B. R., Grant, M., Funk, B., Otis-Green, S., & Garcia, N. (1998). Qualit
 	componentWillUnmount() {
         AuthorNameSorterStore.removeChangeListener(this._onAuthorNameSorterStoreChange);
     }
-    _onAuthorNameSorterStoreChange() {
-    	this.setState({
-    		authorNameSorterResult: AuthorNameSorterStore.getSortedList()
-    	});
+    _onSortHandler(listOfReference) {
+        actionMap.setLoadingStatusTo(true);
+        actionMap.sortListByAuthorStroke(listOfReference);
     }
     _onCopyToClipboardHandler(e) {
         e.preventDefault();
+    }
+    _onAuthorNameSorterStoreChange() {
+        this.setState({
+            authorNameSorterResult: AuthorNameSorterStore.getSortedList(),
+            showLoading: AuthorNameSorterStore.getLoadingStatus()
+        });
     }
     render() {
     	const {
@@ -73,7 +86,9 @@ Ferrell, B. R., Grant, M., Funk, B., Otis-Green, S., & Garcia, N. (1998). Qualit
             inputHintText,
             outputHintText,
             copyToClipboardText,
-            copyCompleteText
+            copyCompleteText,
+            showLoading,
+            loadingText
     	} = this.state;
 
         return (
@@ -96,9 +111,11 @@ Ferrell, B. R., Grant, M., Funk, B., Otis-Green, S., & Garcia, N. (1998). Qualit
                     outputHintText={outputHintText}
                     copyToClipboardText={copyToClipboardText}
                     copyCompleteText={copyCompleteText}
-                    onSortHandler={AuthorNameSorterActions.sortListByAuthorStroke}
+                    loadingText={loadingText}
+                    onSortHandler={this._onSortHandler}
                     sortedResult={authorNameSorterResult}
-                    onCopyToClipboardHandler={this._onCopyToClipboardHandler}/>
+                    onCopyToClipboardHandler={this._onCopyToClipboardHandler}
+                    showLoading={showLoading} />
             </div>
         );
     }

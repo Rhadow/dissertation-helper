@@ -6,6 +6,7 @@ class AuthorNameSorterStore extends EventEmitter{
     constructor() {
         super();
         this._listSortedByAuthorName = '';
+        this._showLoading = false;
     }
 
     emitChange() {
@@ -66,6 +67,13 @@ class AuthorNameSorterStore extends EventEmitter{
     getSortedList() {
         return this._listSortedByAuthorName;
     }
+
+    setLoadingStatusTo(status) {
+        this._showLoading = status;
+    }
+    getLoadingStatus() {
+        return this._showLoading;
+    }
 }
 
 let _AuthorNameSorterStore = new AuthorNameSorterStore();
@@ -75,6 +83,9 @@ _AuthorNameSorterStore.dispatchToken = AppDispatcher.register((payload) => {
     switch(action.actionType){
         case FluxConstants.SORT_AUTHOR_BY_NAME:
             _AuthorNameSorterStore.sortAuthorByName(action.data);
+        break;
+        case FluxConstants.AUTHOR_SORTER_SET_LOADING_STATUS:
+            _AuthorNameSorterStore.setLoadingStatusTo(action.data);
         break;
         default:
            return true;

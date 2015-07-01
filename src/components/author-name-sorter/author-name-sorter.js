@@ -56,13 +56,39 @@ class AuthorNameSorter extends BaseComponent {
 		e.preventDefault();
 		React.findDOMNode(this.refs.authorInput).value = '';
 	}
+	_renderOutputTextArea() {
+		const {
+			showLoading,
+			loadingText,
+			sortedResult
+		} = this.props;
+		let resultHTML = (
+			<textarea
+	            className="form-control output-text-area"
+	            ref="authorOutput"
+	            disabled
+	            value={sortedResult} />
+		);
+
+		if(showLoading) {
+			resultHTML = (
+				<textarea
+		            className="form-control output-text-area"
+		            value={loadingText}
+		            disabled />
+			);
+		}
+
+		return resultHTML;
+	}
 	render() {
 		const {
 			inputHintText,
 			outputHintText,
-			sortedResult,
 			onCopyToClipboardHandler
 		} = this.props;
+
+		let outputTextAreaHTML = this._renderOutputTextArea();
 
 		return (
 			<div className="author-name-sorter container">
@@ -95,11 +121,7 @@ class AuthorNameSorter extends BaseComponent {
 						        <span className="glyphicon glyphicon-list-alt"></span>
 						    </a>
 			            </h4>
-				        <textarea
-				            className="form-control output-text-area"
-				            ref="authorOutput"
-				            disabled
-				            value={sortedResult} />
+				        {outputTextAreaHTML}
 			        </div>
 			    </div>
 			</div>
@@ -112,18 +134,22 @@ AuthorNameSorter.propTypes = {
 	outputHintText          : React.PropTypes.string,
 	copyToClipboardText     : React.PropTypes.string,
 	copyCompleteText        : React.PropTypes.string,
+	loadingText             : React.PropTypes.string,
 	sortedResult            : React.PropTypes.string,
 	onSortHandler           : React.PropTypes.func,
-	onCopyToClipboardHandler: React.PropTypes.func
+	onCopyToClipboardHandler: React.PropTypes.func,
+	showLoading             : React.PropTypes.bool
 };
 AuthorNameSorter.defaultProps = {
 	inputHintText           : 'Input',
 	outputHintText          : 'Output',
 	copyToClipboardText     : 'Copy to clipboard',
 	copyCompleteText        : 'Copied!',
+	loadingText             : 'Loading...',
 	sortedResult            : '',
 	onSortHandler           : () => {},
-	onCopyToClipboardHandler: () => {}
+	onCopyToClipboardHandler: () => {},
+	showLoading             : false
 };
 
 export default AuthorNameSorter;

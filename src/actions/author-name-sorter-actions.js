@@ -47,6 +47,10 @@ let AuthorNameSorterActions = {
 				charStrokeMap[title] = strokes;
 			});
 			AppDispatcher.handleViewAction({
+	            actionType: FluxConstants.AUTHOR_SORTER_SET_LOADING_STATUS,
+	            data      : false
+	        });
+			AppDispatcher.handleViewAction({
 	            actionType: FluxConstants.SORT_AUTHOR_BY_NAME,
 	            data      : {
 	            	englishList: englishReferenceList,
@@ -57,6 +61,12 @@ let AuthorNameSorterActions = {
 		}, (err) => {
 			console.log(err);
 		});
+	},
+	setLoadingStatusTo(status) {
+		AppDispatcher.handleViewAction({
+            actionType: FluxConstants.AUTHOR_SORTER_SET_LOADING_STATUS,
+            data      : status
+        });
 	}
 };
 
