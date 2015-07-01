@@ -24,17 +24,20 @@ class AuthorNameSorter extends BaseComponent {
 		ZeroClipboard.config({
             swfPath: '../../components/author-name-sorter/ZeroClipboard.swf'
         });
-        let clipboardClient = new ZeroClipboard(document.getElementById('copyToClipboardBtn'));
+        let clipboardClient = new ZeroClipboard(React.findDOMNode(this.refs.copyToClipboardBtn));
         clipboardClient.on('ready', () => {
-            $('#copyToClipboardBtn')
+            $(React.findDOMNode(this.refs.copyToClipboardBtn))
                 .data('placement', 'bottom')
                 .attr('title', copyToClipboardText)
                 .tooltip();
             clipboardClient.on('copy', (event) => {
-                event.clipboardData.setData('text/plain', event.target.value);
+                event.clipboardData.setData(
+                	'text/plain',
+                	React.findDOMNode(this.refs.authorOutput).value.replace(/\n\n/g, '\n')
+                );
             });
             clipboardClient.on('aftercopy', () => {
-                $('#copyToClipboardBtn')
+                $($(React.findDOMNode(this.refs.copyToClipboardBtn)))
                     .attr('title', copyCompleteText)
                     .tooltip('fixTitle')
                     .tooltip('show')
@@ -87,15 +90,14 @@ class AuthorNameSorter extends BaseComponent {
 			                {outputHintText}
 			                <a
 					            className="btn btn-default btn-sm"
-					            id="copyToClipboardBtn"
-					            data-clipboard-target="authorOutput"
+					            ref="copyToClipboardBtn"
 					            onClick={onCopyToClipboardHandler}>
 						        <span className="glyphicon glyphicon-list-alt"></span>
 						    </a>
 			            </h4>
 				        <textarea
 				            className="form-control output-text-area"
-				            id="authorOutput"
+				            ref="authorOutput"
 				            disabled
 				            value={sortedResult} />
 			        </div>
