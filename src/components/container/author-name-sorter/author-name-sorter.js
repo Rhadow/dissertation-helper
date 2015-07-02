@@ -46,7 +46,9 @@ Ferrell, B. R., Grant, M., Funk, B., Otis-Green, S., & Garcia, N. (1998). Qualit
             outputHintText: '輸出',
             copyToClipboardText: '複製到剪貼簿',
             copyCompleteText: '已複製!',
-            showLoading: AuthorNameSorterStore.getLoadingStatus()
+            showLoading: AuthorNameSorterStore.getLoadingStatus(),
+            clearText: '清空',
+            sortText: '開始排列!'
 		};
 		this._bind(
             '_onSortHandler',
@@ -88,7 +90,9 @@ Ferrell, B. R., Grant, M., Funk, B., Otis-Green, S., & Garcia, N. (1998). Qualit
             copyToClipboardText,
             copyCompleteText,
             showLoading,
-            loadingText
+            loadingText,
+            clearText,
+            sortText
     	} = this.state;
 
         return (
@@ -112,6 +116,8 @@ Ferrell, B. R., Grant, M., Funk, B., Otis-Green, S., & Garcia, N. (1998). Qualit
                     copyToClipboardText={copyToClipboardText}
                     copyCompleteText={copyCompleteText}
                     loadingText={loadingText}
+                    clearText={clearText}
+                    sortText={sortText}
                     onSortHandler={this._onSortHandler}
                     sortedResult={authorNameSorterResult}
                     onCopyToClipboardHandler={this._onCopyToClipboardHandler}

@@ -21,13 +21,14 @@ class AuthorNameSorter extends BaseComponent {
 			copyToClipboardText,
 			copyCompleteText
 		} = this.props;
+		$('[data-toggle="tooltip"]').tooltip();
 		ZeroClipboard.config({
             swfPath: '../../components/author-name-sorter/ZeroClipboard.swf'
         });
         let clipboardClient = new ZeroClipboard(React.findDOMNode(this.refs.copyToClipboardBtn));
         clipboardClient.on('ready', () => {
             $(React.findDOMNode(this.refs.copyToClipboardBtn))
-                .data('placement', 'bottom')
+                .data('placement', 'top')
                 .attr('title', copyToClipboardText)
                 .tooltip();
             clipboardClient.on('copy', (event) => {
@@ -37,7 +38,7 @@ class AuthorNameSorter extends BaseComponent {
                 );
             });
             clipboardClient.on('aftercopy', () => {
-                $($(React.findDOMNode(this.refs.copyToClipboardBtn)))
+                $(React.findDOMNode(this.refs.copyToClipboardBtn))
                     .attr('title', copyCompleteText)
                     .tooltip('fixTitle')
                     .tooltip('show')
@@ -85,7 +86,9 @@ class AuthorNameSorter extends BaseComponent {
 		const {
 			inputHintText,
 			outputHintText,
-			onCopyToClipboardHandler
+			onCopyToClipboardHandler,
+			clearText,
+			sortText
 		} = this.props;
 
 		let outputTextAreaHTML = this._renderOutputTextArea();
@@ -98,11 +101,17 @@ class AuthorNameSorter extends BaseComponent {
 			                {inputHintText}
 			                <a
 					            className="btn btn-default btn-sm"
+					            data-toggle="tooltip"
+					            data-placement="top"
+					            title={clearText}
 					            onClick={this._onClearHandler}>
 						        <span className="glyphicon glyphicon-remove"></span>
 						    </a>
 			                <a
 					            className="btn btn-default btn-sm"
+					            data-toggle="tooltip"
+					            data-placement="top"
+					            title={sortText}
 					            onClick={this._onSubmitHandler}>
 						        <span className="glyphicon glyphicon-transfer"></span>
 						    </a>
@@ -135,6 +144,8 @@ AuthorNameSorter.propTypes = {
 	copyToClipboardText     : React.PropTypes.string,
 	copyCompleteText        : React.PropTypes.string,
 	loadingText             : React.PropTypes.string,
+	clearText               : React.PropTypes.string,
+	sortText                : React.PropTypes.string,
 	sortedResult            : React.PropTypes.string,
 	onSortHandler           : React.PropTypes.func,
 	onCopyToClipboardHandler: React.PropTypes.func,
@@ -146,6 +157,8 @@ AuthorNameSorter.defaultProps = {
 	copyToClipboardText     : 'Copy to clipboard',
 	copyCompleteText        : 'Copied!',
 	loadingText             : 'Loading...',
+	clearText               : 'Clear',
+	sortText                : 'Start Sorting!',
 	sortedResult            : '',
 	onSortHandler           : () => {},
 	onCopyToClipboardHandler: () => {},
