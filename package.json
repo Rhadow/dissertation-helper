@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.4",
-    "jquery": "^2.1.4",
+    "jquery": "^3.5.0",
     "react": "^0.13.3",
     "zeroclipboard": "^2.2.0"
   },
