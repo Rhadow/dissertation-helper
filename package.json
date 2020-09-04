@@ -46,7 +46,7 @@
   "dependencies": {
     "bootstrap": "^3.3.4",
     "jquery": "^3.5.0",
-    "react": "^0.13.3",
+    "react": "^15.6.2",
     "zeroclipboard": "^2.2.0"
   },
   "vendors": [
